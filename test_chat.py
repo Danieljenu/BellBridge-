@@ -14,3 +14,4 @@ while True:
     msg = input("YOU: ")
     reply = handle_message(number, msg, AUTHORIZED_USERS)
     print("BOT:", reply)
+    
