@@ -67,6 +67,98 @@ def save_authorized_users(users):
 
 AUTHORIZED_USERS = load_authorized_users()
 
+#-------------------------------------------------------------
+# ADD AUTHORIZED USER (FOR FUTURE WHATSAPP INTEGRATION)
+#-------------------------------------------------------------
+
+def add_authorized_user():
+    print("\nADD AUTHORIZED USER")
+    print("1. Principal")
+    print("2. Teacher")
+    print("3. Developer")
+    print("0. Cancel")
+
+    role_map = {
+        "1": "principal",
+        "2": "teacher",
+        "3": "developer"
+    }
+
+    choice = input("Select role: ").strip()
+    if choice == "0":
+        return
+
+    if choice not in role_map:
+        print("Invalid role.")
+        return
+
+    number = input("Enter phone number (+91...): ").strip()
+
+    if not number.startswith("+"):
+        print("Invalid number format.")
+        return
+
+    if number in AUTHORIZED_USERS:
+        print("User already exists.")
+        return
+
+    AUTHORIZED_USERS[number] = role_map[choice]
+    save_authorized_users(AUTHORIZED_USERS)
+    print(f"{number} added as {role_map[choice]}.")
+
+#-------------------------------------------------------------
+# REMOVE AUTHORIZED USER (FOR FUTURE WHATSAPP INTEGRATION)
+#-------------------------------------------------------------
+
+def remove_authorized_user():
+    if not AUTHORIZED_USERS:
+        print("No authorized users.")
+        return
+
+    users = list(AUTHORIZED_USERS.items())
+
+    print("\nAUTHORIZED USERS:")
+    for i, (num, role) in enumerate(users, 1):
+        print(f"{i}. {num} ({role})")
+
+    print("0. Cancel")
+    choice = input("Select user to remove: ").strip()
+
+    if choice == "0":
+        return
+
+    if not choice.isdigit() or not (1 <= int(choice) <= len(users)):
+        print("Invalid selection.")
+        return
+
+    num, role = users[int(choice) - 1]
+    del AUTHORIZED_USERS[num]
+    save_authorized_users(AUTHORIZED_USERS)
+    print(f"Removed {num} ({role}).")
+
+# -------------------------------------------------
+# Manage users menu
+# -------------------------------------------------
+
+def manage_authorized_users():
+    while True:
+        print("\nMANAGE AUTHORIZED USERS")
+        print("1. Add User")
+        print("2. Remove User")
+        print("0. Back")
+
+        choice = input("Choose: ").strip()
+
+        if choice == "1":
+            add_authorized_user()
+        elif choice == "2":
+            remove_authorized_user()
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")
+
+
 # -------------------------------------------------------------
 # TIME PARSER (for bell times, accepts 9, 9:30, 9am, 9:30 pm, 21:00)
 # -------------------------------------------------------------
@@ -419,6 +511,7 @@ def settings_menu():
         print("3. Set Extra Audio 1")
         print("4. Set Extra Audio 2")
         print("5. Change Prayer/Birthday file for a specific day")
+        print("6. Manage Authorized Users")
         print("0. Back")
         choice = input("Choose: ").strip()
 
@@ -459,6 +552,9 @@ def settings_menu():
                 DAY_CONFIG[d]["birthday"] = new_bday
             if new_label:
                 DAY_CONFIG[d]["label"] = new_label
+
+        elif choice == "6":
+            manage_authorized_users()
 
         elif choice == "0":
             return
