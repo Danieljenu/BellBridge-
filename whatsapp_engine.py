@@ -222,3 +222,6 @@ def load_about_us():
             return f.read()
     except FileNotFoundError:
         return "About Us file not found."
+    
+        
+        
