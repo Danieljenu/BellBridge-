@@ -16,6 +16,8 @@ import time
 import pyttsx3
 import json
 import os
+from whatsapp_connector import connect_whatsapp, is_connected
+
 
 # -------------------------------------------------------------
 # GLOBAL MODE FLAG
@@ -822,6 +824,7 @@ def main_menu():
         print("3. Announcement")
         print("4. Settings")
         print("5. About Us")
+        print("6. Check WhatsApp Connectivity")
         print("0. Exit")
         choice = input("Choose: ").strip()
 
@@ -843,6 +846,17 @@ def main_menu():
             typewriter(about_text, delay=0.01)
             print("\n==============================\n")
             input("Press Enter to go back.")
+
+        elif choice == "6":
+            if is_connected():
+                print("✅ WhatsApp already connected.")
+            else:
+                print("🔗 Connecting to WhatsApp...")
+                success = connect_whatsapp()
+                if success:
+                    print("✅ WhatsApp Connected Successfully.")
+                else:
+                    print("❌ WhatsApp Connection Failed.")
 
         elif choice == "0":
             print("Goodbye!")
